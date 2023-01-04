@@ -5,7 +5,7 @@ import { SHOP_URL } from "../utils/constants";
 
 const Footer = () => {
   const { footerData } = useStateContext();
-  console.log(footerData?.data);
+
   return (
     <>
       <Grid

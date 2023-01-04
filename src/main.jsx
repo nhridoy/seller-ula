@@ -15,14 +15,19 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ContextProvider } from "./contexts/ContextProvider";
 
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <ContextProvider>
-        <App />
-      </ContextProvider>
-    </QueryClientProvider>
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <QueryClientProvider client={queryClient}>
+        <ContextProvider>
+          <App />
+        </ContextProvider>
+      </QueryClientProvider>
+    </LocalizationProvider>
   </React.StrictMode>
 );

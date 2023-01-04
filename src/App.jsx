@@ -5,18 +5,18 @@ import { useStateContext } from "./contexts/ContextProvider";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Terms from "./pages/Terms";
+import { Box } from "@mui/material";
+import FormPage from "./pages/FormPage";
 
 function App() {
-  const [count, setCount] = useState(0);
-  const { addressData } = useStateContext();
-  console.log(addressData.data);
+  const [proceed, setProceed] = useState(true);
 
   return (
-    <>
+    <Box sx={{ background: "#f6f6f6" }}>
       <Header />
-      <Terms />
+      {proceed ? <FormPage /> : <Terms setProceed={setProceed} />}
       <Footer />
-    </>
+    </Box>
   );
 }
 
