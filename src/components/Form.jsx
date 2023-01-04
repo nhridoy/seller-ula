@@ -1,7 +1,8 @@
-import { Grid, TextField } from "@mui/material";
+import { Box, Grid, TextField } from "@mui/material";
 import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import React, { useState } from "react";
+import img from "../assets/ula_2.png";
 
 export default function Form() {
   const [value, setValue] = useState(new Date());
@@ -18,7 +19,6 @@ export default function Form() {
           // height: "500px",
           border: "1px solid #00000030",
           background: "#ffffff",
-          display: "flex",
           padding: "10px",
         }}
       >
@@ -237,7 +237,25 @@ export default function Form() {
             }}
           />
         </div> */}
-
+        <Box
+          style={{
+            width: "max-content",
+            margin: "20px auto",
+            textAlign: "center",
+          }}
+        >
+          <img
+            src={img}
+            alt=""
+            srcset=""
+            style={{
+              width: "100px",
+              height: "100px",
+              margin: "10px auto",
+            }}
+          />
+          <h2>BECOME A SELLER</h2>
+        </Box>
         <Grid
           container
           spacing={2}
