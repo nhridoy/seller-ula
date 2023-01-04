@@ -1,9 +1,9 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
-import { useStateContext } from "./contexts/ContextProvider";
-import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Form from "./components/Form";
+import Header from "./components/Header";
+import { useStateContext } from "./contexts/ContextProvider";
 import Terms from "./pages/Terms";
 
 function App() {
@@ -15,6 +15,8 @@ function App() {
     <>
       <Header />
       <Terms />
+      <Form />
+      {/* <HorizontalNonLinearStepper /> */}
       <Footer />
     </>
   );
