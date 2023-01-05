@@ -40,6 +40,7 @@ const FormPage = () => {
   const [sellerPassportImage, setSellerPassportImage] = React.useState(null);
   const [sellerShopLogo, setSellerShopLogo] = React.useState(null);
   const [sellerShopCover, setSellerShopCover] = React.useState(null);
+  const [sellerShopCheck, setSellerShopCheck] = React.useState(null);
   const [sellerShopLicense, setSellerShopLicense] = React.useState(null);
   const [firstWitnessName, setFirstWitnessName] = React.useState(null);
   const [firstWitnessPhone, setFirstWitnessPhone] = React.useState(null);
@@ -49,7 +50,7 @@ const FormPage = () => {
     React.useState(null);
   const [city, setCity] = React.useState(null);
   const [thana, setThana] = React.useState(null);
-  const { addressData } = useStateContext();
+  const { addressData } = useStateContext(null);
 
   const isStepOptional = (step) => {
     return step === 4;
@@ -65,7 +66,7 @@ const FormPage = () => {
       (!sellerName ||
         !sellerAddress ||
         !birthDate ||
-        sellerNID ||
+        !sellerNID ||
         !sellerDesignation ||
         !sellerBank ||
         !sellerShopName ||
@@ -77,6 +78,7 @@ const FormPage = () => {
         !sellerPassportImage ||
         !sellerShopLogo ||
         !sellerShopCover ||
+        !sellerShopCheck ||
         !sellerShopLicense ||
         !firstWitnessName ||
         !firstWitnessPhone ||
@@ -84,7 +86,35 @@ const FormPage = () => {
         !firstWitnessAddress ||
         !firstWitnessSignature)
     ) {
-      toast.error("Wrong");
+      toast.error("Please fill up all filled");
+      return;
+    } else {
+      toast.success("hello");
+      console.log({
+        seller_name: sellerName,
+        signature: sellerSignature,
+        seller_address: sellerAddress,
+        date_of_birth: birthDate,
+        nid_number: sellerNID,
+        phone_number: "",
+        password: "",
+        nid_image: sellerNIDImage,
+        designation: sellerDesignation,
+        passport_image: sellerPassportImage,
+        bank_account: sellerBank,
+        cheque: sellerShopCheck,
+        shop_name: sellerShopName,
+        city: city.id,
+        shop_address: sellerShopAddress,
+        shop_logo: sellerShopLogo,
+        shop_cover: sellerShopCover,
+        trade_licence: sellerShopLicense,
+        witness_1_name: firstWitnessName,
+        witness_1_phone: firstWitnessPhone,
+        witness_1_nid: firstWitnessNID,
+        witness_1_address: firstWitnessAddress,
+        witness_1_signature: firstWitnessSignature,
+      });
       return;
     }
     toast.success("Next");
@@ -513,64 +543,18 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Seller Signature
-                        <input
-                          required
-                          accept="image/*"
-                          onChange={(e) => setSellerSignature(e.target.value)}
-                          value={sellerSignature}
-                          type="file"
-                          hidden
-                        />
-                      </Button>
-                      <Button
-                        sx={{
-                          p: 0.85,
-                          color: "#7155e5",
-                          borderColor: "#7155e5",
-                          "&:hover": {
-                            backgroundColor: "#7155e510",
-                            borderColor: "#7155e5",
-                            boxShadow: "none",
-                          },
-                        }}
-                        variant="outlined"
-                        fullWidth
-                        component="label"
-                      >
-                        Upload NID Image
-                        <input
-                          required
-                          accept="image/*"
-                          onChange={(e) => setSellerNIDImage(e.target.value)}
-                          value={sellerNIDImage}
-                          type="file"
-                          hidden
-                        />
-                      </Button>
-                      <Button
-                        sx={{
-                          p: 0.85,
-                          color: "#7155e5",
-                          borderColor: "#7155e5",
-                          "&:hover": {
-                            backgroundColor: "#7155e510",
-                            borderColor: "#7155e5",
-                            boxShadow: "none",
-                          },
-                        }}
-                        variant="outlined"
-                        fullWidth
-                        component="label"
-                      >
-                        Upload Passport Size Image
+                        Upload Seller Signature{" "}
+                        {sellerSignature ? "(Selected)" : "(Required)"}
                         <input
                           required
                           accept="image/*"
                           onChange={(e) =>
-                            setSellerPassportImage(e.target.value)
+                            setSellerSignature(e.target.files[0])
                           }
-                          value={sellerPassportImage}
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerSignature}
                           type="file"
                           hidden
                         />
@@ -590,12 +574,16 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Shop Logo
+                        Upload NID Image{" "}
+                        {sellerNIDImage ? "(Selected)" : "(Required)"}
                         <input
                           required
                           accept="image/*"
-                          onChange={(e) => setSellerShopLogo(e.target.value)}
-                          value={sellerShopLogo}
+                          onChange={(e) => setSellerNIDImage(e.target.files[0])}
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerNIDImage}
                           type="file"
                           hidden
                         />
@@ -615,12 +603,18 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Shop Cover Photo
+                        Upload Passport Size Image{" "}
+                        {sellerPassportImage ? "(Selected)" : "(Required)"}
                         <input
                           required
                           accept="image/*"
-                          onChange={(e) => setSellerShopCover(e.target.value)}
-                          value={sellerShopCover}
+                          onChange={(e) =>
+                            setSellerPassportImage(e.target.files[0])
+                          }
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerPassportImage}
                           type="file"
                           hidden
                         />
@@ -640,12 +634,109 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Trade License
+                        Upload Shop Logo{" "}
+                        {sellerShopLogo ? "(Selected)" : "(Required)"}
                         <input
                           required
                           accept="image/*"
-                          onChange={(e) => setSellerShopLicense(e.target.value)}
-                          value={sellerShopLicense}
+                          onChange={(e) => setSellerShopLogo(e.target.files[0])}
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerShopLogo}
+                          type="file"
+                          hidden
+                        />
+                      </Button>
+                      <Button
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
+                        variant="outlined"
+                        fullWidth
+                        component="label"
+                      >
+                        Upload Shop Cover Photo{" "}
+                        {sellerShopCover ? "(Selected)" : "(Required)"}
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setSellerShopCover(e.target.files[0])
+                          }
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerShopCover}
+                          type="file"
+                          hidden
+                        />
+                      </Button>
+                      <Button
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
+                        variant="outlined"
+                        fullWidth
+                        component="label"
+                      >
+                        Upload Check Image{" "}
+                        {sellerShopCheck ? "(Selected)" : "(Required)"}
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setSellerShopCheck(e.target.files[0])
+                          }
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerShopCheck}
+                          type="file"
+                          hidden
+                        />
+                      </Button>
+                      <Button
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
+                        variant="outlined"
+                        fullWidth
+                        component="label"
+                      >
+                        Upload Trade License{" "}
+                        {sellerShopLicense ? "(Selected)" : "(Required)"}
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setSellerShopLicense(e.target.files[0])
+                          }
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerShopLicense}
                           type="file"
                           hidden
                         />
@@ -788,14 +879,18 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Signature
+                        Upload Signature{" "}
+                        {firstWitnessSignature ? "(Selected)" : "(Required)"}
                         <input
                           required
                           accept="image/*"
                           onChange={(e) =>
-                            setFirstWitnessSignature(e.target.value)
+                            setFirstWitnessSignature(e.target.files[0])
                           }
-                          value={firstWitnessSignature}
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={firstWitnessSignature}
                           type="file"
                           hidden
                         />
