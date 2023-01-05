@@ -50,6 +50,11 @@ const FormPage = () => {
     React.useState(null);
   const [city, setCity] = React.useState(null);
   const [thana, setThana] = React.useState(null);
+  const [sellerPhone, setSellerPhone] = React.useState(null);
+  const [sellerPhoneOTP, setSellerPhoneOTP] = React.useState(null);
+  const [sellerEmail, setSellerEmail] = React.useState(null);
+  const [sellerEmailOTP, setSellerEmailOTP] = React.useState(null);
+  const [sellerPassword, setSellerPassword] = React.useState(null);
   const { addressData } = useStateContext(null);
 
   const isStepOptional = (step) => {
@@ -86,46 +91,57 @@ const FormPage = () => {
         !firstWitnessAddress ||
         !firstWitnessSignature)
     ) {
-      toast.error("Please fill up all filled");
+      toast.error("Please fill up all input");
+      return;
+    } else if (activeStep === 1 && !sellerPhone) {
+      toast.error("Please fill up all input");
+      return;
+    } else if (activeStep === 2 && !sellerPhoneOTP) {
+      toast.error("Please fill up all input");
+      return;
+    } else if (activeStep === 3 && !sellerEmail) {
+      toast.error("Please fill up all input");
+      return;
+    } else if (activeStep === 5 && !sellerPassword) {
+      toast.error("Please fill up all input");
       return;
     } else {
-      toast.success("hello");
-      console.log({
-        seller_name: sellerName,
-        signature: sellerSignature,
-        seller_address: sellerAddress,
-        date_of_birth: birthDate,
-        nid_number: sellerNID,
-        phone_number: "",
-        password: "",
-        nid_image: sellerNIDImage,
-        designation: sellerDesignation,
-        passport_image: sellerPassportImage,
-        bank_account: sellerBank,
-        cheque: sellerShopCheck,
-        shop_name: sellerShopName,
-        city: city.id,
-        shop_address: sellerShopAddress,
-        shop_logo: sellerShopLogo,
-        shop_cover: sellerShopCover,
-        trade_licence: sellerShopLicense,
-        witness_1_name: firstWitnessName,
-        witness_1_phone: firstWitnessPhone,
-        witness_1_nid: firstWitnessNID,
-        witness_1_address: firstWitnessAddress,
-        witness_1_signature: firstWitnessSignature,
-      });
-      return;
-    }
-    toast.success("Next");
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
+      toast.success("Next");
+      let newSkipped = skipped;
+      if (isStepSkipped(activeStep)) {
+        newSkipped = new Set(newSkipped.values());
+        newSkipped.delete(activeStep);
+      }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+      setSkipped(newSkipped);
+      //   console.log({
+      //     seller_name: sellerName,
+      //     signature: sellerSignature,
+      //     seller_address: sellerAddress,
+      //     date_of_birth: birthDate,
+      //     nid_number: sellerNID,
+      //     phone_number: sellerPhone,
+      //     password: sellerPassword,
+      //     nid_image: sellerNIDImage,
+      //     designation: sellerDesignation,
+      //     passport_image: sellerPassportImage,
+      //     bank_account: sellerBank,
+      //     cheque: sellerShopCheck,
+      //     shop_name: sellerShopName,
+      //     city: city.id,
+      //     shop_address: sellerShopAddress,
+      //     shop_logo: sellerShopLogo,
+      //     shop_cover: sellerShopCover,
+      //     trade_licence: sellerShopLicense,
+      //     witness_1_name: firstWitnessName,
+      //     witness_1_phone: firstWitnessPhone,
+      //     witness_1_nid: firstWitnessNID,
+      //     witness_1_address: firstWitnessAddress,
+      //     witness_1_signature: firstWitnessSignature,
+      //   });
+      //   return;
+    }
   };
 
   const handleBack = () => {
@@ -1020,6 +1036,9 @@ const FormPage = () => {
                 ) : activeStep === 1 ? (
                   <Box>
                     <TextField
+                      required
+                      onChange={(e) => setSellerPhone(e.target.value)}
+                      value={sellerPhone}
                       size="small"
                       fullWidth
                       id="seller_phone"
@@ -1049,6 +1068,9 @@ const FormPage = () => {
                 ) : activeStep === 2 ? (
                   <Box>
                     <TextField
+                      required
+                      onChange={(e) => setSellerPhoneOTP(e.target.value)}
+                      value={sellerPhoneOTP}
                       size="small"
                       fullWidth
                       id="OTP"
@@ -1078,6 +1100,9 @@ const FormPage = () => {
                 ) : activeStep === 3 ? (
                   <Box>
                     <TextField
+                      required
+                      onChange={(e) => setSellerEmail(e.target.value)}
+                      value={sellerEmail}
                       size="small"
                       fullWidth
                       id="email"
@@ -1108,6 +1133,8 @@ const FormPage = () => {
                 ) : activeStep === 4 ? (
                   <Box>
                     <TextField
+                      onChange={(e) => setSellerEmailOTP(e.target.value)}
+                      value={sellerEmailOTP}
                       size="small"
                       fullWidth
                       id="email_otp"
@@ -1138,6 +1165,9 @@ const FormPage = () => {
                 ) : (
                   <Box>
                     <TextField
+                      required
+                      onChange={(e) => setSellerPassword(e.target.value)}
+                      value={sellerPassword}
                       size="small"
                       fullWidth
                       id="password"
