@@ -6,7 +6,9 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Terms from "./pages/Terms";
 import { Box } from "@mui/material";
+import { ToastContainer } from "react-toastify";
 import FormPage from "./pages/FormPage";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const [proceed, setProceed] = useState(true);
@@ -16,6 +18,7 @@ function App() {
       <Header />
       {proceed ? <FormPage /> : <Terms setProceed={setProceed} />}
       <Footer />
+      <ToastContainer />
     </Box>
   );
 }

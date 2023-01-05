@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import React from "react";
+import { toast } from "react-toastify";
 import { useStateContext } from "../contexts/ContextProvider";
 
 const steps = [
@@ -25,12 +26,31 @@ const steps = [
 
 const FormPage = () => {
   const [activeStep, setActiveStep] = React.useState(0);
-  const [birthDate, setBirthDate] = React.useState(null);
   const [skipped, setSkipped] = React.useState(new Set());
+  const [sellerName, setSellerName] = React.useState(null);
+  const [sellerAddress, setSellerAddress] = React.useState(null);
+  const [birthDate, setBirthDate] = React.useState(null);
+  const [sellerNID, setSellerNID] = React.useState(null);
+  const [sellerDesignation, setSellerDesignation] = React.useState(null);
+  const [sellerBank, setSellerBank] = React.useState(null);
+  const [sellerShopName, setSellerShopName] = React.useState(null);
+  const [sellerShopAddress, setSellerShopAddress] = React.useState(null);
+  const [sellerSignature, setSellerSignature] = React.useState(null);
+  const [sellerNIDImage, setSellerNIDImage] = React.useState(null);
+  const [sellerPassportImage, setSellerPassportImage] = React.useState(null);
+  const [sellerShopLogo, setSellerShopLogo] = React.useState(null);
+  const [sellerShopCover, setSellerShopCover] = React.useState(null);
+  const [sellerShopLicense, setSellerShopLicense] = React.useState(null);
+  const [firstWitnessName, setFirstWitnessName] = React.useState(null);
+  const [firstWitnessPhone, setFirstWitnessPhone] = React.useState(null);
+  const [firstWitnessNID, setFirstWitnessNID] = React.useState(null);
+  const [firstWitnessAddress, setFirstWitnessAddress] = React.useState(null);
+  const [firstWitnessSignature, setFirstWitnessSignature] =
+    React.useState(null);
   const [city, setCity] = React.useState(null);
   const [thana, setThana] = React.useState(null);
   const { addressData } = useStateContext();
-  console.log(addressData.data.thana);
+
   const isStepOptional = (step) => {
     return step === 4;
   };
@@ -39,7 +59,35 @@ const FormPage = () => {
     return skipped.has(step);
   };
 
-  const handleNext = () => {
+  const handleNext = (e) => {
+    if (
+      activeStep === 0 &&
+      (!sellerName ||
+        !sellerAddress ||
+        !birthDate ||
+        sellerNID ||
+        !sellerDesignation ||
+        !sellerBank ||
+        !sellerShopName ||
+        !sellerShopAddress ||
+        !city ||
+        !thana ||
+        !sellerSignature ||
+        !sellerNIDImage ||
+        !sellerPassportImage ||
+        !sellerShopLogo ||
+        !sellerShopCover ||
+        !sellerShopLicense ||
+        !firstWitnessName ||
+        !firstWitnessPhone ||
+        !firstWitnessNID ||
+        !firstWitnessAddress ||
+        !firstWitnessSignature)
+    ) {
+      toast.error("Wrong");
+      return;
+    }
+    toast.success("Next");
     let newSkipped = skipped;
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
@@ -132,6 +180,9 @@ const FormPage = () => {
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
                       <TextField
+                        required
+                        onChange={(e) => setSellerName(e.target.value)}
+                        value={sellerName}
                         size="small"
                         fullWidth
                         id="seller_name"
@@ -158,6 +209,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setSellerAddress(e.target.value)}
+                        value={sellerAddress}
                         size="small"
                         fullWidth
                         id="seller_address"
@@ -191,6 +245,7 @@ const FormPage = () => {
                         }}
                         renderInput={(params) => (
                           <TextField
+                            required
                             size="small"
                             {...params}
                             sx={{
@@ -216,6 +271,9 @@ const FormPage = () => {
                         )}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setSellerNID(e.target.value)}
+                        value={sellerNID}
                         size="small"
                         fullWidth
                         type="number"
@@ -243,32 +301,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
-                        size="small"
-                        fullWidth
-                        id="phone_number"
-                        label="Phone Number"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <TextField
+                        required
+                        onChange={(e) => setSellerDesignation(e.target.value)}
+                        value={sellerDesignation}
                         size="small"
                         fullWidth
                         id="designation"
@@ -295,6 +330,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setSellerBank(e.target.value)}
+                        value={sellerBank}
                         size="small"
                         fullWidth
                         id="bank_account"
@@ -321,6 +359,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setSellerShopName(e.target.value)}
+                        value={sellerShopName}
                         size="small"
                         fullWidth
                         id="shop_name"
@@ -347,6 +388,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setSellerShopAddress(e.target.value)}
+                        value={sellerShopAddress}
                         size="small"
                         fullWidth
                         id="shop_address"
@@ -383,6 +427,7 @@ const FormPage = () => {
                         value={city}
                         renderInput={(params) => (
                           <TextField
+                            required
                             {...params}
                             label="City"
                             sx={{
@@ -421,6 +466,7 @@ const FormPage = () => {
                           value={thana}
                           renderInput={(params) => (
                             <TextField
+                              required
                               {...params}
                               label="City"
                               sx={{
@@ -453,58 +499,156 @@ const FormPage = () => {
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
                       <Button
-                        sx={{ p: 0.85 }}
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
                         variant="outlined"
                         fullWidth
                         component="label"
                       >
-                        Upload Seller Signeture
-                        <input type="file" hidden />
+                        Upload Seller Signature
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) => setSellerSignature(e.target.value)}
+                          value={sellerSignature}
+                          type="file"
+                          hidden
+                        />
                       </Button>
                       <Button
-                        sx={{ p: 0.85 }}
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
                         variant="outlined"
                         fullWidth
                         component="label"
                       >
                         Upload NID Image
-                        <input type="file" hidden />
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) => setSellerNIDImage(e.target.value)}
+                          value={sellerNIDImage}
+                          type="file"
+                          hidden
+                        />
                       </Button>
                       <Button
-                        sx={{ p: 0.85 }}
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
                         variant="outlined"
                         fullWidth
                         component="label"
                       >
                         Upload Passport Size Image
-                        <input type="file" hidden />
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setSellerPassportImage(e.target.value)
+                          }
+                          value={sellerPassportImage}
+                          type="file"
+                          hidden
+                        />
                       </Button>
                       <Button
-                        sx={{ p: 0.85 }}
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
                         variant="outlined"
                         fullWidth
                         component="label"
                       >
                         Upload Shop Logo
-                        <input type="file" hidden />
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) => setSellerShopLogo(e.target.value)}
+                          value={sellerShopLogo}
+                          type="file"
+                          hidden
+                        />
                       </Button>
                       <Button
-                        sx={{ p: 0.85 }}
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
                         variant="outlined"
                         fullWidth
                         component="label"
                       >
                         Upload Shop Cover Photo
-                        <input type="file" hidden />
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) => setSellerShopCover(e.target.value)}
+                          value={sellerShopCover}
+                          type="file"
+                          hidden
+                        />
                       </Button>
                       <Button
-                        sx={{ p: 0.85 }}
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
                         variant="outlined"
                         fullWidth
                         component="label"
                       >
                         Upload Trade License
-                        <input type="file" hidden />
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) => setSellerShopLicense(e.target.value)}
+                          value={sellerShopLicense}
+                          type="file"
+                          hidden
+                        />
                       </Button>
                     </Grid>
                     <Grid
@@ -514,6 +658,9 @@ const FormPage = () => {
                     >
                       <Typography fontWeight="bold">FIRST WITNESS</Typography>
                       <TextField
+                        required
+                        onChange={(e) => setFirstWitnessName(e.target.value)}
+                        value={firstWitnessName}
                         size="small"
                         fullWidth
                         id="first_witness_name"
@@ -540,6 +687,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setFirstWitnessPhone(e.target.value)}
+                        value={firstWitnessPhone}
                         size="small"
                         fullWidth
                         id="first_witness_phone"
@@ -566,6 +716,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setFirstWitnessNID(e.target.value)}
+                        value={firstWitnessNID}
                         size="small"
                         fullWidth
                         id="first_witness_nid"
@@ -592,6 +745,9 @@ const FormPage = () => {
                         }}
                       />
                       <TextField
+                        required
+                        onChange={(e) => setFirstWitnessAddress(e.target.value)}
+                        value={firstWitnessAddress}
                         size="small"
                         fullWidth
                         id="first_witness_address"
@@ -618,13 +774,31 @@ const FormPage = () => {
                         }}
                       />
                       <Button
-                        sx={{ p: 0.85 }}
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
                         variant="outlined"
                         fullWidth
                         component="label"
                       >
-                        Upload Signeture
-                        <input type="file" hidden />
+                        Upload Signature
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setFirstWitnessSignature(e.target.value)
+                          }
+                          value={firstWitnessSignature}
+                          type="file"
+                          hidden
+                        />
                       </Button>
                     </Grid>
                     <Grid
