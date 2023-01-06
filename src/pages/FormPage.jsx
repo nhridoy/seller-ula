@@ -287,6 +287,7 @@ const FormPage = () => {
                     <Grid
                       item
                       md={6}
+                      xs={12}
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
                       <TextField
@@ -669,6 +670,7 @@ const FormPage = () => {
                       />
                     </Grid>
                     <Grid
+                      xs={12}
                       item
                       md={6}
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
@@ -888,6 +890,7 @@ const FormPage = () => {
                       </Button>
                     </Grid>
                     <Grid
+                      xs={12}
                       item
                       md={6}
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
@@ -1042,6 +1045,7 @@ const FormPage = () => {
                       </Button>
                     </Grid>
                     <Grid
+                      xs={12}
                       item
                       md={6}
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
