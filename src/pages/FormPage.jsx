@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
+import axios from "axios";
 import React from "react";
 import { toast } from "react-toastify";
 import { useStateContext } from "../contexts/ContextProvider";
@@ -51,10 +52,10 @@ const FormPage = () => {
   const [city, setCity] = React.useState(null);
   const [thana, setThana] = React.useState(null);
   const [sellerPhone, setSellerPhone] = React.useState(null);
-  const [sellerPhoneOTP, setSellerPhoneOTP] = React.useState(null);
-  const [sellerEmail, setSellerEmail] = React.useState(null);
-  const [sellerEmailOTP, setSellerEmailOTP] = React.useState(null);
-  const [sellerPassword, setSellerPassword] = React.useState(null);
+  const [sellerPhoneOTP, setSellerPhoneOTP] = React.useState("");
+  const [sellerEmail, setSellerEmail] = React.useState("");
+  const [sellerEmailOTP, setSellerEmailOTP] = React.useState("");
+  const [sellerPassword, setSellerPassword] = React.useState("");
   const { addressData } = useStateContext(null);
 
   const isStepOptional = (step) => {
@@ -93,55 +94,109 @@ const FormPage = () => {
     ) {
       toast.error("Please fill up all input");
       return;
-    } else if (activeStep === 1 && !sellerPhone) {
-      toast.error("Please fill up all input");
-      return;
-    } else if (activeStep === 2 && !sellerPhoneOTP) {
-      toast.error("Please fill up all input");
-      return;
+    } else if (activeStep === 1) {
+      if (!sellerPhone) {
+        toast.error("Please fill up all input");
+        return;
+      } else {
+        axios
+          .post("https://admin.ula.com.bd/api/send-otp-to-phone", {
+            phone_number: sellerPhone,
+            sector: 2,
+          })
+          .then((data) => {
+            toast.success(data.data.detail);
+            hanglepageChange();
+          })
+          .catch((e) => {
+            toast.error("OTP Send failed. Try again later");
+            return;
+          });
+      }
+    } else if (activeStep === 2) {
+      if (!sellerPhoneOTP) {
+        toast.error("Please fill up all input");
+        return;
+      } else {
+        axios
+          .post("https://admin.ula.com.bd/api/verify-otp", {
+            phone_number: sellerPhone,
+            otp: sellerPhoneOTP,
+          })
+          .then((data) => {
+            if (data.data.status) {
+              toast.success(data.data.detail);
+              hanglepageChange();
+            } else {
+              toast.error(data.data.detail);
+              return;
+            }
+          })
+          .catch((e) => {
+            toast.error("OTP failed. Try again later");
+            return;
+          });
+      }
     } else if (activeStep === 3 && !sellerEmail) {
       toast.error("Please fill up all input");
       return;
-    } else if (activeStep === 5 && !sellerPassword) {
-      toast.error("Please fill up all input");
-      return;
-    } else {
-      toast.success("Next");
-      let newSkipped = skipped;
-      if (isStepSkipped(activeStep)) {
-        newSkipped = new Set(newSkipped.values());
-        newSkipped.delete(activeStep);
+    } else if (activeStep === 5) {
+      if (!sellerPassword) {
+        toast.error("Please fill up all input");
+        return;
+      } else {
+        console.log(firstWitnessSignature);
+        axios
+          .postForm("https://admin.ula.com.bd/api/seller-create", {
+            seller_name: sellerName,
+            signature: sellerSignature,
+            seller_address: sellerAddress,
+            date_of_birth: birthDate,
+            nid_number: sellerNID,
+            phone_number: sellerPhone,
+            email: sellerEmail,
+            password: sellerPassword,
+            nid_image: sellerNIDImage,
+            designation: sellerDesignation,
+            passport_image: sellerPassportImage,
+            bank_account: sellerBank,
+            cheque: sellerShopCheck,
+            shop_name: sellerShopName,
+            city: city.id,
+            thana: thana.id,
+            shop_address: sellerShopAddress,
+            shop_logo: sellerShopLogo,
+            shop_cover: sellerShopCover,
+            trade_licence: sellerShopLicense,
+            witness_name: firstWitnessName,
+            witness_phone: firstWitnessPhone,
+            witness_nid: firstWitnessNID,
+            witness_address: firstWitnessAddress,
+            witness_signature: firstWitnessSignature,
+          })
+          .then((data) => {
+            toast.success(data.data.detail);
+            hanglepageChange();
+          })
+          .catch((e) => {
+            toast.error(e.response.data.msg);
+            return;
+          });
       }
-
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      setSkipped(newSkipped);
-      //   console.log({
-      //     seller_name: sellerName,
-      //     signature: sellerSignature,
-      //     seller_address: sellerAddress,
-      //     date_of_birth: birthDate,
-      //     nid_number: sellerNID,
-      //     phone_number: sellerPhone,
-      //     password: sellerPassword,
-      //     nid_image: sellerNIDImage,
-      //     designation: sellerDesignation,
-      //     passport_image: sellerPassportImage,
-      //     bank_account: sellerBank,
-      //     cheque: sellerShopCheck,
-      //     shop_name: sellerShopName,
-      //     city: city.id,
-      //     shop_address: sellerShopAddress,
-      //     shop_logo: sellerShopLogo,
-      //     shop_cover: sellerShopCover,
-      //     trade_licence: sellerShopLicense,
-      //     witness_1_name: firstWitnessName,
-      //     witness_1_phone: firstWitnessPhone,
-      //     witness_1_nid: firstWitnessNID,
-      //     witness_1_address: firstWitnessAddress,
-      //     witness_1_signature: firstWitnessSignature,
-      //   });
-      //   return;
+    } else {
+      hanglepageChange();
     }
+  };
+
+  const hanglepageChange = () => {
+    let newSkipped = skipped;
+    if (isStepSkipped(activeStep)) {
+      newSkipped = new Set(newSkipped.values());
+      newSkipped.delete(activeStep);
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setSkipped(newSkipped);
   };
 
   const handleBack = () => {
@@ -163,9 +218,9 @@ const FormPage = () => {
     });
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+  //   const handleReset = () => {
+  //     setActiveStep(0);
+  //   };
 
   return (
     <Box py={4} px={8}>
@@ -1214,7 +1269,7 @@ const FormPage = () => {
                 )}
 
                 <Button onClick={handleNext}>
-                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                  {activeStep === steps.length - 1 ? "Submit" : "Next"}
                 </Button>
               </Box>
             </>
