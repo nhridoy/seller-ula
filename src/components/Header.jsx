@@ -13,6 +13,7 @@ const Header = () => {
         background: "#695da9",
         p: 1,
         fontWeight: "bold",
+        fontSize: { xs: "12px", md: "14px" },
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

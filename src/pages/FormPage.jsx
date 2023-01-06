@@ -223,11 +223,11 @@ const FormPage = () => {
   //   };
 
   return (
-    <Box py={4} px={8}>
+    <Box sx={{ paddingX: { xs: 4, md: 8 }, paddingY: 4 }}>
       <Paper
         sx={{
           background: "#fff",
-          p: 4,
+          p: { xs: 2, md: 4 },
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -236,11 +236,14 @@ const FormPage = () => {
         elevation={2}
       >
         <img src="/images/ula_2.png" alt="Ula Logo" width={80} />
-        <Typography variant="h4" color="#695da9">
+        <Typography sx={{ typography: { xs: "h5", md: "h4" } }} color="#695da9">
           BECOME A SELLER
         </Typography>
         <Box sx={{ width: "100%" }}>
-          <Stepper activeStep={activeStep}>
+          <Stepper
+            activeStep={activeStep}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
             {steps.map((label, index) => {
               const stepProps = {};
               const labelProps = {};
@@ -272,7 +275,6 @@ const FormPage = () => {
           ) : (
             <>
               <Box sx={{ mt: 2, mb: 1 }}>
-                Step {activeStep + 1}
                 {activeStep === 0 ? (
                   <Grid container spacing={2}>
                     <Grid
