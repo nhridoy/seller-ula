@@ -14,13 +14,17 @@ export const ContextProvider = ({ children }) => {
     ["footer"],
     () => myAxios.get("footer")
   );
+  const { data: deliveryData, isLoading: deliveryDataLoading } = useQuery(
+    ["seller-create"],
+    () => myAxios.get("seller-create")
+  );
 
-  if (addressLoading || footerLoading) {
-    return <>Loading....</>;
+  if (addressLoading || footerLoading || deliveryDataLoading) {
+    return <></>;
   }
 
   return (
-    <StateContext.Provider value={{ addressData, footerData }}>
+    <StateContext.Provider value={{ addressData, footerData, deliveryData }}>
       {children}
     </StateContext.Provider>
   );

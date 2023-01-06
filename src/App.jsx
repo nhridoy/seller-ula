@@ -11,7 +11,7 @@ import FormPage from "./pages/FormPage";
 import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const [proceed, setProceed] = useState(true);
+  const [proceed, setProceed] = useState(false);
 
   return (
     <Box sx={{ background: "#f6f6f6" }}>

@@ -15,6 +15,7 @@ import axios from "axios";
 import React from "react";
 import { toast } from "react-toastify";
 import { useStateContext } from "../contexts/ContextProvider";
+import myAxios from "../utils/myAxios";
 
 const steps = [
   "Seller Info",
@@ -30,6 +31,7 @@ const FormPage = () => {
   const [skipped, setSkipped] = React.useState(new Set());
   const [sellerName, setSellerName] = React.useState(null);
   const [sellerAddress, setSellerAddress] = React.useState(null);
+  const [sellerZipcode, setSellerZipcode] = React.useState(null);
   const [birthDate, setBirthDate] = React.useState(null);
   const [sellerNID, setSellerNID] = React.useState(null);
   const [sellerDesignation, setSellerDesignation] = React.useState(null);
@@ -51,12 +53,13 @@ const FormPage = () => {
     React.useState(null);
   const [city, setCity] = React.useState(null);
   const [thana, setThana] = React.useState(null);
+  const [delivery, setDelivery] = React.useState(null);
   const [sellerPhone, setSellerPhone] = React.useState(null);
   const [sellerPhoneOTP, setSellerPhoneOTP] = React.useState("");
   const [sellerEmail, setSellerEmail] = React.useState("");
   const [sellerEmailOTP, setSellerEmailOTP] = React.useState("");
   const [sellerPassword, setSellerPassword] = React.useState("");
-  const { addressData } = useStateContext(null);
+  const { addressData, deliveryData } = useStateContext();
 
   const isStepOptional = (step) => {
     return step === 4;
@@ -71,6 +74,7 @@ const FormPage = () => {
       activeStep === 0 &&
       (!sellerName ||
         !sellerAddress ||
+        !sellerZipcode ||
         !birthDate ||
         !sellerNID ||
         !sellerDesignation ||
@@ -79,6 +83,7 @@ const FormPage = () => {
         !sellerShopAddress ||
         !city ||
         !thana ||
+        !delivery ||
         !sellerSignature ||
         !sellerNIDImage ||
         !sellerPassportImage ||
@@ -99,8 +104,8 @@ const FormPage = () => {
         toast.error("Please fill up all input");
         return;
       } else {
-        axios
-          .post("https://admin.ula.com.bd/api/send-otp-to-phone", {
+        myAxios
+          .post("send-otp-to-phone", {
             phone_number: sellerPhone,
             sector: 2,
           })
@@ -118,8 +123,8 @@ const FormPage = () => {
         toast.error("Please fill up all input");
         return;
       } else {
-        axios
-          .post("https://admin.ula.com.bd/api/verify-otp", {
+        myAxios
+          .post("verify-otp", {
             phone_number: sellerPhone,
             otp: sellerPhoneOTP,
           })
@@ -145,13 +150,14 @@ const FormPage = () => {
         toast.error("Please fill up all input");
         return;
       } else {
-        console.log(firstWitnessSignature);
-        axios
-          .postForm("https://admin.ula.com.bd/api/seller-create", {
+        console.log(birthDate.format("YYYY-MM-DD"));
+        myAxios
+          .postForm("seller-create", {
             seller_name: sellerName,
             signature: sellerSignature,
             seller_address: sellerAddress,
-            date_of_birth: birthDate,
+            zip_code: sellerZipcode,
+            date_of_birth: birthDate.format("YYYY-MM-DD"),
             nid_number: sellerNID,
             phone_number: sellerPhone,
             email: sellerEmail,
@@ -164,6 +170,7 @@ const FormPage = () => {
             shop_name: sellerShopName,
             city: city.id,
             thana: thana.id,
+            delivery_service: delivery.id,
             shop_address: sellerShopAddress,
             shop_logo: sellerShopLogo,
             shop_cover: sellerShopCover,
@@ -218,9 +225,9 @@ const FormPage = () => {
     });
   };
 
-  //   const handleReset = () => {
-  //     setActiveStep(0);
-  //   };
+  const handleReset = () => {
+    setActiveStep(0);
+  };
 
   return (
     <Box sx={{ paddingX: { xs: 4, md: 8 }, paddingY: 4 }}>
@@ -319,6 +326,35 @@ const FormPage = () => {
                         fullWidth
                         id="seller_address"
                         label="Seller Address"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <TextField
+                        required
+                        onChange={(e) => setSellerZipcode(e.target.value)}
+                        value={sellerZipcode}
+                        size="small"
+                        fullWidth
+                        id="seller_zipcode"
+                        label="Zipcode"
                         variant="outlined"
                         sx={{
                           "& label.Mui-focused": {
@@ -595,6 +631,42 @@ const FormPage = () => {
                           )}
                         />
                       )}
+                      <Autocomplete
+                        disablePortal
+                        fullWidth
+                        size="small"
+                        id="combo-box-demo"
+                        options={deliveryData.data.delivery_service}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(e, data) => setDelivery(data)}
+                        value={delivery}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            {...params}
+                            label="Select Delivery Service"
+                            sx={{
+                              "& label.Mui-focused": {
+                                color: "#695da9",
+                              },
+                              "& .MuiInput-underline:after": {
+                                borderBottomColor: "#695da9",
+                              },
+                              "& .MuiOutlinedInput-root": {
+                                //   "& fieldset": {
+                                //     borderColor: "red",
+                                //   },
+                                //   "&:hover fieldset": {
+                                //     borderColor: "yellow",
+                                //   },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#695da9",
+                                },
+                              },
+                            }}
+                          />
+                        )}
+                      />
                     </Grid>
                     <Grid
                       item

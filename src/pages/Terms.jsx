@@ -11,7 +11,7 @@ import React, { useState } from "react";
 const Terms = ({ setProceed }) => {
   const [agreed, setAgreed] = useState(false);
   return (
-    <Box py={4} px={8}>
+    <Box sx={{ paddingX: { xs: 4, md: 8 }, paddingY: 4 }}>
       <Paper
         sx={{
           background: "#fff",
