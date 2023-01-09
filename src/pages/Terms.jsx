@@ -7,9 +7,11 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
+import parse from "html-react-parser";
 
-const Terms = ({ setProceed }) => {
+const Terms = ({ setProceed, data }) => {
   const [agreed, setAgreed] = useState(false);
+
   return (
     <Box sx={{ paddingX: { xs: 4, md: 8 }, paddingY: 4 }}>
       <Paper
@@ -24,18 +26,34 @@ const Terms = ({ setProceed }) => {
         elevation={2}
       >
         <Typography variant="h4" align="center">
-          Terms & Conditions
+          Agreement
         </Typography>
-        <Typography>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda,
-          iure aliquid debitis sunt molestiae, eligendi sit error cum id
-          provident vero quia, laborum architecto illo cumque. Facere nostrum
-          ducimus illo.
-        </Typography>
+        {parse(data)}
+
         <FormControlLabel
           onChange={(e) => setAgreed(e.target.checked)}
           control={<Checkbox />}
-          label="I agree to the terms & conditions"
+          label={
+            <div>
+              By selecting proceed I agree to the{" "}
+              <a
+                href="https://ula.com.bd/termsandcondition"
+                target="_blank"
+                style={{ fontWeight: "bold", textDecoration: "none" }}
+              >
+                Terms & Conditions
+              </a>{" "}
+              and{" "}
+              <a
+                href="https://ula.com.bd/privacy-policy"
+                target="_blank"
+                style={{ fontWeight: "bold", textDecoration: "none" }}
+              >
+                Privacy Policy
+              </a>{" "}
+              of ULA.
+            </div>
+          }
           labelPlacement="end"
         />
         <Button

@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
-import axios from "axios";
 import React from "react";
 import { toast } from "react-toastify";
 import { useStateContext } from "../contexts/ContextProvider";
@@ -30,12 +29,21 @@ const FormPage = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [sellerName, setSellerName] = React.useState(null);
-  const [sellerAddress, setSellerAddress] = React.useState(null);
-  const [sellerZipcode, setSellerZipcode] = React.useState(null);
+  const [currentAddress, setCurrentAddress] = React.useState(null);
+  const [parmanentAddress, setParmanentAddress] = React.useState(null);
+  const [currentZipcode, setCurrentZipcode] = React.useState(null);
+  const [parmanentZipcode, setParmanentZipcode] = React.useState(null);
+  const [currentCity, setCurrentCity] = React.useState(null);
+  const [currentThana, setCurrentThana] = React.useState(null);
+  const [parmanentCity, setParmanentCity] = React.useState(null);
+  const [parmanentThana, setParmanentThana] = React.useState(null);
   const [birthDate, setBirthDate] = React.useState(null);
   const [sellerNID, setSellerNID] = React.useState(null);
   const [sellerDesignation, setSellerDesignation] = React.useState(null);
   const [sellerBank, setSellerBank] = React.useState(null);
+  const [sellerBankNo, setSellerBankNo] = React.useState(null);
+  const [sellerBankBranch, setSellerBankBranch] = React.useState(null);
+  const [sellerBankRouting, setSellerBankRouting] = React.useState(null);
   const [sellerShopName, setSellerShopName] = React.useState(null);
   const [sellerShopAddress, setSellerShopAddress] = React.useState(null);
   const [sellerSignature, setSellerSignature] = React.useState(null);
@@ -51,10 +59,9 @@ const FormPage = () => {
   const [firstWitnessAddress, setFirstWitnessAddress] = React.useState(null);
   const [firstWitnessSignature, setFirstWitnessSignature] =
     React.useState(null);
-  const [city, setCity] = React.useState(null);
-  const [thana, setThana] = React.useState(null);
   const [delivery, setDelivery] = React.useState(null);
   const [sellerPhone, setSellerPhone] = React.useState(null);
+  const [binNumber, setBinNumber] = React.useState(null);
   const [sellerPhoneOTP, setSellerPhoneOTP] = React.useState("");
   const [sellerEmail, setSellerEmail] = React.useState("");
   const [sellerEmailOTP, setSellerEmailOTP] = React.useState("");
@@ -73,12 +80,21 @@ const FormPage = () => {
     if (
       activeStep === 0 &&
       (!sellerName ||
-        !sellerAddress ||
-        !sellerZipcode ||
+        !currentAddress ||
+        !parmanentAddress ||
+        !currentZipcode ||
+        !parmanentZipcode ||
+        !currentCity ||
+        !currentThana ||
+        !parmanentCity ||
+        !parmanentThana ||
         !birthDate ||
         !sellerNID ||
         !sellerDesignation ||
         !sellerBank ||
+        !sellerBankNo ||
+        !sellerBankBranch ||
+        !sellerBankRouting ||
         !sellerShopName ||
         !sellerShopAddress ||
         !city ||
@@ -150,36 +166,42 @@ const FormPage = () => {
         toast.error("Please fill up all input");
         return;
       } else {
-        console.log(birthDate.format("YYYY-MM-DD"));
         myAxios
           .postForm("seller-create", {
             seller_name: sellerName,
             signature: sellerSignature,
-            seller_address: sellerAddress,
-            zip_code: sellerZipcode,
+            current_address: currentAddress,
+            current_city: currentCity.id,
+            current_thana: currentThana.id,
+            current_zip_code: currentZipcode,
+            parmanent_address: parmanentAddress,
+            parmanent_city: parmanentCity.id,
+            parmanent_thana: parmanentThana.id,
+            parmanent_zip_code: parmanentZipcode,
             date_of_birth: birthDate.format("YYYY-MM-DD"),
             nid_number: sellerNID,
             phone_number: sellerPhone,
-            email: sellerEmail,
+            email: sellerEmail, // TODO
             password: sellerPassword,
             nid_image: sellerNIDImage,
             designation: sellerDesignation,
             passport_image: sellerPassportImage,
-            bank_account: sellerBank,
+            bank_name: sellerBank,
+            bank_account_no: sellerBankNo,
+            bank_branch_name: sellerBankBranch,
+            bank_routing: sellerBankRouting,
             cheque: sellerShopCheck,
             shop_name: sellerShopName,
-            city: city.id,
-            thana: thana.id,
             delivery_service: delivery.id,
             shop_address: sellerShopAddress,
             shop_logo: sellerShopLogo,
             shop_cover: sellerShopCover,
             trade_licence: sellerShopLicense,
-            witness_name: firstWitnessName,
-            witness_phone: firstWitnessPhone,
-            witness_nid: firstWitnessNID,
-            witness_address: firstWitnessAddress,
-            witness_signature: firstWitnessSignature,
+            witness_1_name: firstWitnessName,
+            witness_1_phone: firstWitnessPhone,
+            witness_1_nid: firstWitnessNID,
+            witness_1_address: firstWitnessAddress,
+            witness_1_signature: firstWitnessSignature,
           })
           .then((data) => {
             toast.success(data.data.detail);
@@ -290,6 +312,9 @@ const FormPage = () => {
                       xs={12}
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
+                      <Typography fontWeight="bold">
+                        SELLER PERSONAL INFORMATION
+                      </Typography>
                       <TextField
                         required
                         onChange={(e) => setSellerName(e.target.value)}
@@ -298,64 +323,6 @@ const FormPage = () => {
                         fullWidth
                         id="seller_name"
                         label="Seller Name"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <TextField
-                        required
-                        onChange={(e) => setSellerAddress(e.target.value)}
-                        value={sellerAddress}
-                        size="small"
-                        fullWidth
-                        id="seller_address"
-                        label="Seller Address"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <TextField
-                        required
-                        onChange={(e) => setSellerZipcode(e.target.value)}
-                        value={sellerZipcode}
-                        size="small"
-                        fullWidth
-                        id="seller_zipcode"
-                        label="Zipcode"
                         variant="outlined"
                         sx={{
                           "& label.Mui-focused": {
@@ -440,6 +407,35 @@ const FormPage = () => {
                           },
                         }}
                       />
+                      <Button
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
+                        variant="outlined"
+                        fullWidth
+                        component="label"
+                      >
+                        Upload NID Image{" "}
+                        {sellerNIDImage ? "(Selected)" : "(Required)"}
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) => setSellerNIDImage(e.target.files[0])}
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerNIDImage}
+                          type="file"
+                          hidden
+                        />
+                      </Button>
                       <TextField
                         required
                         onChange={(e) => setSellerDesignation(e.target.value)}
@@ -469,14 +465,79 @@ const FormPage = () => {
                           },
                         }}
                       />
+                      <Button
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
+                        variant="outlined"
+                        fullWidth
+                        component="label"
+                      >
+                        Upload Seller Signature{" "}
+                        {sellerSignature ? "(Selected)" : "(Required)"}
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setSellerSignature(e.target.files[0])
+                          }
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerSignature}
+                          type="file"
+                          hidden
+                        />
+                      </Button>
+                      <Button
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
+                        variant="outlined"
+                        fullWidth
+                        component="label"
+                      >
+                        Upload Passport Size Image{" "}
+                        {sellerPassportImage ? "(Selected)" : "(Required)"}
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setSellerPassportImage(e.target.files[0])
+                          }
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerPassportImage}
+                          type="file"
+                          hidden
+                        />
+                      </Button>
+                      <Typography fontWeight="bold">
+                        SELLER ADDRESS INFORMATION
+                      </Typography>
                       <TextField
                         required
-                        onChange={(e) => setSellerBank(e.target.value)}
-                        value={sellerBank}
+                        onChange={(e) => setCurrentAddress(e.target.value)}
+                        value={currentAddress}
                         size="small"
                         fullWidth
-                        id="bank_account"
-                        label="Bank Account"
+                        id="current_address"
+                        label="Current Address"
                         variant="outlined"
                         sx={{
                           "& label.Mui-focused": {
@@ -498,6 +559,251 @@ const FormPage = () => {
                           },
                         }}
                       />
+                      <TextField
+                        required
+                        onChange={(e) => setCurrentZipcode(e.target.value)}
+                        value={currentZipcode}
+                        size="small"
+                        fullWidth
+                        id="current_zipcode"
+                        label="Current Zipcode"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <Autocomplete
+                        disablePortal
+                        fullWidth
+                        size="small"
+                        options={addressData.data.city}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(e, data) => setCurrentCity(data)}
+                        value={currentCity}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            {...params}
+                            label="Current City"
+                            sx={{
+                              "& label.Mui-focused": {
+                                color: "#695da9",
+                              },
+                              "& .MuiInput-underline:after": {
+                                borderBottomColor: "#695da9",
+                              },
+                              "& .MuiOutlinedInput-root": {
+                                //   "& fieldset": {
+                                //     borderColor: "red",
+                                //   },
+                                //   "&:hover fieldset": {
+                                //     borderColor: "yellow",
+                                //   },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#695da9",
+                                },
+                              },
+                            }}
+                          />
+                        )}
+                      />
+                      {currentCity && (
+                        <Autocomplete
+                          disablePortal
+                          fullWidth
+                          size="small"
+                          options={addressData.data.thana.filter(
+                            (item) => item.city === currentCity.id
+                          )}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, data) => setCurrentThana(data)}
+                          value={currentThana}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              {...params}
+                              label="Present City"
+                              sx={{
+                                "& label.Mui-focused": {
+                                  color: "#695da9",
+                                },
+                                "& .MuiInput-underline:after": {
+                                  borderBottomColor: "#695da9",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  //   "& fieldset": {
+                                  //     borderColor: "red",
+                                  //   },
+                                  //   "&:hover fieldset": {
+                                  //     borderColor: "yellow",
+                                  //   },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#695da9",
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                      <TextField
+                        required
+                        onChange={(e) => setParmanentAddress(e.target.value)}
+                        value={parmanentAddress}
+                        size="small"
+                        fullWidth
+                        id="parmanent_address"
+                        label="Parmanent Address"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <TextField
+                        required
+                        onChange={(e) => setParmanentZipcode(e.target.value)}
+                        value={parmanentZipcode}
+                        size="small"
+                        fullWidth
+                        id="parmanent_zipcode"
+                        label="Parmanent Zipcode"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <Autocomplete
+                        disablePortal
+                        fullWidth
+                        size="small"
+                        options={addressData.data.city}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(e, data) => setParmanentCity(data)}
+                        value={parmanentCity}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            {...params}
+                            label="Parmanent City"
+                            sx={{
+                              "& label.Mui-focused": {
+                                color: "#695da9",
+                              },
+                              "& .MuiInput-underline:after": {
+                                borderBottomColor: "#695da9",
+                              },
+                              "& .MuiOutlinedInput-root": {
+                                //   "& fieldset": {
+                                //     borderColor: "red",
+                                //   },
+                                //   "&:hover fieldset": {
+                                //     borderColor: "yellow",
+                                //   },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#695da9",
+                                },
+                              },
+                            }}
+                          />
+                        )}
+                      />
+                      {parmanentCity && (
+                        <Autocomplete
+                          disablePortal
+                          fullWidth
+                          size="small"
+                          options={addressData.data.thana.filter(
+                            (item) => item.city === parmanentCity.id
+                          )}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, data) => setParmanentThana(data)}
+                          value={parmanentThana}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              {...params}
+                              label="Parmanent City"
+                              sx={{
+                                "& label.Mui-focused": {
+                                  color: "#695da9",
+                                },
+                                "& .MuiInput-underline:after": {
+                                  borderBottomColor: "#695da9",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  //   "& fieldset": {
+                                  //     borderColor: "red",
+                                  //   },
+                                  //   "&:hover fieldset": {
+                                  //     borderColor: "yellow",
+                                  //   },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#695da9",
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                    </Grid>
+                    <Grid
+                      xs={12}
+                      item
+                      md={6}
+                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+                    >
+                      <Typography fontWeight="bold">
+                        SHOP INFORMATION
+                      </Typography>
                       <TextField
                         required
                         onChange={(e) => setSellerShopName(e.target.value)}
@@ -556,216 +862,6 @@ const FormPage = () => {
                           },
                         }}
                       />
-                      <Autocomplete
-                        disablePortal
-                        fullWidth
-                        size="small"
-                        id="combo-box-demo"
-                        options={addressData.data.city}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(e, data) => setCity(data)}
-                        value={city}
-                        renderInput={(params) => (
-                          <TextField
-                            required
-                            {...params}
-                            label="City"
-                            sx={{
-                              "& label.Mui-focused": {
-                                color: "#695da9",
-                              },
-                              "& .MuiInput-underline:after": {
-                                borderBottomColor: "#695da9",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                //   "& fieldset": {
-                                //     borderColor: "red",
-                                //   },
-                                //   "&:hover fieldset": {
-                                //     borderColor: "yellow",
-                                //   },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#695da9",
-                                },
-                              },
-                            }}
-                          />
-                        )}
-                      />
-                      {city && (
-                        <Autocomplete
-                          disablePortal
-                          fullWidth
-                          size="small"
-                          id="combo-box-demo"
-                          options={addressData.data.thana.filter(
-                            (item) => item.city === city.id
-                          )}
-                          getOptionLabel={(option) => option.name}
-                          onChange={(e, data) => setThana(data)}
-                          value={thana}
-                          renderInput={(params) => (
-                            <TextField
-                              required
-                              {...params}
-                              label="City"
-                              sx={{
-                                "& label.Mui-focused": {
-                                  color: "#695da9",
-                                },
-                                "& .MuiInput-underline:after": {
-                                  borderBottomColor: "#695da9",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                  //   "& fieldset": {
-                                  //     borderColor: "red",
-                                  //   },
-                                  //   "&:hover fieldset": {
-                                  //     borderColor: "yellow",
-                                  //   },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#695da9",
-                                  },
-                                },
-                              }}
-                            />
-                          )}
-                        />
-                      )}
-                      <Autocomplete
-                        disablePortal
-                        fullWidth
-                        size="small"
-                        id="combo-box-demo"
-                        options={deliveryData.data.delivery_service}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(e, data) => setDelivery(data)}
-                        value={delivery}
-                        renderInput={(params) => (
-                          <TextField
-                            required
-                            {...params}
-                            label="Select Delivery Service"
-                            sx={{
-                              "& label.Mui-focused": {
-                                color: "#695da9",
-                              },
-                              "& .MuiInput-underline:after": {
-                                borderBottomColor: "#695da9",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                //   "& fieldset": {
-                                //     borderColor: "red",
-                                //   },
-                                //   "&:hover fieldset": {
-                                //     borderColor: "yellow",
-                                //   },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#695da9",
-                                },
-                              },
-                            }}
-                          />
-                        )}
-                      />
-                    </Grid>
-                    <Grid
-                      xs={12}
-                      item
-                      md={6}
-                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                    >
-                      <Button
-                        sx={{
-                          p: 0.85,
-                          color: "#7155e5",
-                          borderColor: "#7155e5",
-                          "&:hover": {
-                            backgroundColor: "#7155e510",
-                            borderColor: "#7155e5",
-                            boxShadow: "none",
-                          },
-                        }}
-                        variant="outlined"
-                        fullWidth
-                        component="label"
-                      >
-                        Upload Seller Signature{" "}
-                        {sellerSignature ? "(Selected)" : "(Required)"}
-                        <input
-                          required
-                          accept="image/*"
-                          onChange={(e) =>
-                            setSellerSignature(e.target.files[0])
-                          }
-                          onClick={(event) => {
-                            event.target.value = null;
-                          }}
-                          //   value={sellerSignature}
-                          type="file"
-                          hidden
-                        />
-                      </Button>
-                      <Button
-                        sx={{
-                          p: 0.85,
-                          color: "#7155e5",
-                          borderColor: "#7155e5",
-                          "&:hover": {
-                            backgroundColor: "#7155e510",
-                            borderColor: "#7155e5",
-                            boxShadow: "none",
-                          },
-                        }}
-                        variant="outlined"
-                        fullWidth
-                        component="label"
-                      >
-                        Upload NID Image{" "}
-                        {sellerNIDImage ? "(Selected)" : "(Required)"}
-                        <input
-                          required
-                          accept="image/*"
-                          onChange={(e) => setSellerNIDImage(e.target.files[0])}
-                          onClick={(event) => {
-                            event.target.value = null;
-                          }}
-                          //   value={sellerNIDImage}
-                          type="file"
-                          hidden
-                        />
-                      </Button>
-                      <Button
-                        sx={{
-                          p: 0.85,
-                          color: "#7155e5",
-                          borderColor: "#7155e5",
-                          "&:hover": {
-                            backgroundColor: "#7155e510",
-                            borderColor: "#7155e5",
-                            boxShadow: "none",
-                          },
-                        }}
-                        variant="outlined"
-                        fullWidth
-                        component="label"
-                      >
-                        Upload Passport Size Image{" "}
-                        {sellerPassportImage ? "(Selected)" : "(Required)"}
-                        <input
-                          required
-                          accept="image/*"
-                          onChange={(e) =>
-                            setSellerPassportImage(e.target.files[0])
-                          }
-                          onClick={(event) => {
-                            event.target.value = null;
-                          }}
-                          //   value={sellerPassportImage}
-                          type="file"
-                          hidden
-                        />
-                      </Button>
                       <Button
                         sx={{
                           p: 0.85,
@@ -841,37 +937,6 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Check Image{" "}
-                        {sellerShopCheck ? "(Selected)" : "(Required)"}
-                        <input
-                          required
-                          accept="image/*"
-                          onChange={(e) =>
-                            setSellerShopCheck(e.target.files[0])
-                          }
-                          onClick={(event) => {
-                            event.target.value = null;
-                          }}
-                          //   value={sellerShopCheck}
-                          type="file"
-                          hidden
-                        />
-                      </Button>
-                      <Button
-                        sx={{
-                          p: 0.85,
-                          color: "#7155e5",
-                          borderColor: "#7155e5",
-                          "&:hover": {
-                            backgroundColor: "#7155e510",
-                            borderColor: "#7155e5",
-                            boxShadow: "none",
-                          },
-                        }}
-                        variant="outlined"
-                        fullWidth
-                        component="label"
-                      >
                         Upload Trade License{" "}
                         {sellerShopLicense ? "(Selected)" : "(Required)"}
                         <input
@@ -888,14 +953,230 @@ const FormPage = () => {
                           hidden
                         />
                       </Button>
+                      <TextField
+                        onChange={(e) => setBinNumber(e.target.value)}
+                        value={binNumber}
+                        size="small"
+                        fullWidth
+                        id="bin_number"
+                        label="BIN Number"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <Autocomplete
+                        disablePortal
+                        fullWidth
+                        size="small"
+                        id="combo-box-demo"
+                        options={deliveryData.data.delivery_service}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(e, data) => setDelivery(data)}
+                        value={delivery}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            {...params}
+                            label="Select Delivery Service"
+                            sx={{
+                              "& label.Mui-focused": {
+                                color: "#695da9",
+                              },
+                              "& .MuiInput-underline:after": {
+                                borderBottomColor: "#695da9",
+                              },
+                              "& .MuiOutlinedInput-root": {
+                                //   "& fieldset": {
+                                //     borderColor: "red",
+                                //   },
+                                //   "&:hover fieldset": {
+                                //     borderColor: "yellow",
+                                //   },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#695da9",
+                                },
+                              },
+                            }}
+                          />
+                        )}
+                      />
+
+                      <Typography fontWeight="bold">
+                        BANK INFORMATION
+                      </Typography>
+
+                      <TextField
+                        required
+                        onChange={(e) => setSellerBank(e.target.value)}
+                        value={sellerBank}
+                        size="small"
+                        fullWidth
+                        id="bank_name"
+                        label="Bank Name"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <TextField
+                        required
+                        onChange={(e) => setSellerBankNo(e.target.value)}
+                        value={sellerBankNo}
+                        size="small"
+                        fullWidth
+                        id="bank_no"
+                        label="Bank Account Number"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <TextField
+                        required
+                        onChange={(e) => setSellerBankBranch(e.target.value)}
+                        value={sellerBankBranch}
+                        size="small"
+                        fullWidth
+                        id="bank_branch"
+                        label="Branch Name"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <TextField
+                        required
+                        onChange={(e) => setSellerBankRouting(e.target.value)}
+                        value={sellerBankRouting}
+                        size="small"
+                        fullWidth
+                        id="bank_routing"
+                        label="Routing Number"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+
+                      <Button
+                        sx={{
+                          p: 0.85,
+                          color: "#7155e5",
+                          borderColor: "#7155e5",
+                          "&:hover": {
+                            backgroundColor: "#7155e510",
+                            borderColor: "#7155e5",
+                            boxShadow: "none",
+                          },
+                        }}
+                        variant="outlined"
+                        fullWidth
+                        component="label"
+                      >
+                        Upload Check Image{" "}
+                        {sellerShopCheck ? "(Selected)" : "(Required)"}
+                        <input
+                          required
+                          accept="image/*"
+                          onChange={(e) =>
+                            setSellerShopCheck(e.target.files[0])
+                          }
+                          onClick={(event) => {
+                            event.target.value = null;
+                          }}
+                          //   value={sellerShopCheck}
+                          type="file"
+                          hidden
+                        />
+                      </Button>
                     </Grid>
                     <Grid
-                      xs={12}
                       item
-                      md={6}
+                      md={12}
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >
-                      <Typography fontWeight="bold">FIRST WITNESS</Typography>
+                      <Typography fontWeight="bold">WITNESS</Typography>
                       <TextField
                         required
                         onChange={(e) => setFirstWitnessName(e.target.value)}
@@ -1043,127 +1324,6 @@ const FormPage = () => {
                           hidden
                         />
                       </Button>
-                    </Grid>
-                    <Grid
-                      xs={12}
-                      item
-                      md={6}
-                      sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-                    >
-                      <Typography fontWeight="bold">SECOND WITNESS</Typography>
-                      <TextField
-                        disabled
-                        defaultValue="Md. Rafiqul Islam"
-                        size="small"
-                        fullWidth
-                        id="second_witness_name"
-                        label="Name"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <TextField
-                        disabled
-                        defaultValue="01710069741"
-                        size="small"
-                        fullWidth
-                        id="second_witness_phone"
-                        label="Phone"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <TextField
-                        disabled
-                        defaultValue="7339927266"
-                        size="small"
-                        fullWidth
-                        id="second_witness_nid"
-                        label="NID"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <TextField
-                        disabled
-                        defaultValue="264/B, West 
-                      Manikdi, Dhaka Cantonment, Dhaka-1206"
-                        size="small"
-                        fullWidth
-                        id="second_witness_address"
-                        label="Address"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
                     </Grid>
                   </Grid>
                 ) : activeStep === 1 ? (
