@@ -211,7 +211,9 @@ const FormPage = () => {
             hanglepageChange();
           })
           .catch((e) => {
-            toast.error("OTP Send failed. Try again later");
+            toast.error(
+              e.response.data.detail || "OTP Send failed. Try again later"
+            );
             return;
           });
       }
@@ -1056,7 +1058,7 @@ const FormPage = () => {
                         size="small"
                         fullWidth
                         id="bin_number"
-                        label="BIN Number"
+                        label="BIN Number (If Any)"
                         variant="outlined"
                         sx={{
                           "& label.Mui-focused": {
@@ -1342,7 +1344,7 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Check Image{" "}
+                        Upload Cheque Image{" "}
                         {sellerShopCheck ? "(Selected)" : "(Required)"}
                         <input
                           required
