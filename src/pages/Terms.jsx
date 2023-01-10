@@ -28,7 +28,7 @@ const Terms = ({ setProceed, data }) => {
         <Typography variant="h4" align="center">
           Agreement
         </Typography>
-        {parse(data)}
+        <Box px={4}>{parse(data)}</Box>
 
         <FormControlLabel
           onChange={(e) => setAgreed(e.target.checked)}

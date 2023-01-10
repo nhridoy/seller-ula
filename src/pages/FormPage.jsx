@@ -33,6 +33,8 @@ const FormPage = () => {
   const [parmanentAddress, setParmanentAddress] = React.useState(null);
   const [currentZipcode, setCurrentZipcode] = React.useState(null);
   const [parmanentZipcode, setParmanentZipcode] = React.useState(null);
+  const [currentArea, setCurrentArea] = React.useState(null);
+  const [parmanentArea, setParmanentArea] = React.useState(null);
   const [currentCity, setCurrentCity] = React.useState(null);
   const [currentThana, setCurrentThana] = React.useState(null);
   const [parmanentCity, setParmanentCity] = React.useState(null);
@@ -66,7 +68,86 @@ const FormPage = () => {
   const [sellerEmail, setSellerEmail] = React.useState("");
   const [sellerEmailOTP, setSellerEmailOTP] = React.useState("");
   const [sellerPassword, setSellerPassword] = React.useState("");
+  const [currentZipList, setCurrentZipList] = React.useState([]);
+  const [currentAreaList, setCurrentAreaList] = React.useState([]);
+  const [parmanentZipList, setParmanentZipList] = React.useState([]);
+  const [parmanentAreaList, setParmanentAreaList] = React.useState([]);
   const { addressData, deliveryData } = useStateContext();
+
+  const handleCurrentZipList = (city, thana) => {
+    myAxios
+      .post(
+        "https://backoffice.ecourier.com.bd/api/postcode-list",
+        {
+          city: city.name,
+          thana: thana.name,
+        },
+        {
+          headers: {
+            "API-SECRET": "EWMe0",
+            "API-KEY": "HV9h",
+            "USER-ID": "Q3116",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((data) => setCurrentZipList(data.data.message));
+  };
+  const handleCurrentAreaList = (zip) => {
+    myAxios
+      .post(
+        "https://backoffice.ecourier.com.bd/api/area-list",
+        {
+          postcode: zip.value,
+        },
+        {
+          headers: {
+            "API-SECRET": "EWMe0",
+            "API-KEY": "HV9h",
+            "USER-ID": "Q3116",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((data) => setCurrentAreaList(data.data.message));
+  };
+  const handleParmanentZipList = (city, thana) => {
+    myAxios
+      .post(
+        "https://backoffice.ecourier.com.bd/api/postcode-list",
+        {
+          city: city.name,
+          thana: thana.name,
+        },
+        {
+          headers: {
+            "API-SECRET": "EWMe0",
+            "API-KEY": "HV9h",
+            "USER-ID": "Q3116",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((data) => setParmanentZipList(data.data.message));
+  };
+  const handleParmanentAreaList = (zip) => {
+    myAxios
+      .post(
+        "https://backoffice.ecourier.com.bd/api/area-list",
+        {
+          postcode: zip.value,
+        },
+        {
+          headers: {
+            "API-SECRET": "EWMe0",
+            "API-KEY": "HV9h",
+            "USER-ID": "Q3116",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((data) => setParmanentAreaList(data.data.message));
+  };
 
   const isStepOptional = (step) => {
     return step === 4;
@@ -84,6 +165,8 @@ const FormPage = () => {
         !parmanentAddress ||
         !currentZipcode ||
         !parmanentZipcode ||
+        !currentArea ||
+        !parmanentArea ||
         !currentCity ||
         !currentThana ||
         !parmanentCity ||
@@ -97,8 +180,6 @@ const FormPage = () => {
         !sellerBankRouting ||
         !sellerShopName ||
         !sellerShopAddress ||
-        !city ||
-        !thana ||
         !delivery ||
         !sellerSignature ||
         !sellerNIDImage ||
@@ -150,7 +231,7 @@ const FormPage = () => {
               hanglepageChange();
             } else {
               toast.error(data.data.detail);
-              return;
+              hanglepageChange();
             }
           })
           .catch((e) => {
@@ -173,15 +254,17 @@ const FormPage = () => {
             current_address: currentAddress,
             current_city: currentCity.id,
             current_thana: currentThana.id,
-            current_zip_code: currentZipcode,
+            current_zip_code: currentZipcode.value,
+            current_area: currentArea.value,
             parmanent_address: parmanentAddress,
             parmanent_city: parmanentCity.id,
             parmanent_thana: parmanentThana.id,
-            parmanent_zip_code: parmanentZipcode,
+            parmanent_zip_code: parmanentZipcode.value,
+            parmanent_area: parmanentArea.value,
             date_of_birth: birthDate.format("YYYY-MM-DD"),
             nid_number: sellerNID,
             phone_number: sellerPhone,
-            email: sellerEmail, // TODO
+            email: sellerEmail,
             password: sellerPassword,
             nid_image: sellerNIDImage,
             designation: sellerDesignation,
@@ -379,6 +462,35 @@ const FormPage = () => {
                       />
                       <TextField
                         required
+                        onChange={(e) => setSellerDesignation(e.target.value)}
+                        value={sellerDesignation}
+                        size="small"
+                        fullWidth
+                        id="designation"
+                        label="Designation"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <TextField
+                        required
                         onChange={(e) => setSellerNID(e.target.value)}
                         value={sellerNID}
                         size="small"
@@ -436,35 +548,7 @@ const FormPage = () => {
                           hidden
                         />
                       </Button>
-                      <TextField
-                        required
-                        onChange={(e) => setSellerDesignation(e.target.value)}
-                        value={sellerDesignation}
-                        size="small"
-                        fullWidth
-                        id="designation"
-                        label="Designation"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
+
                       <Button
                         sx={{
                           p: 0.85,
@@ -530,64 +614,7 @@ const FormPage = () => {
                       <Typography fontWeight="bold">
                         SELLER ADDRESS INFORMATION
                       </Typography>
-                      <TextField
-                        required
-                        onChange={(e) => setCurrentAddress(e.target.value)}
-                        value={currentAddress}
-                        size="small"
-                        fullWidth
-                        id="current_address"
-                        label="Current Address"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <TextField
-                        required
-                        onChange={(e) => setCurrentZipcode(e.target.value)}
-                        value={currentZipcode}
-                        size="small"
-                        fullWidth
-                        id="current_zipcode"
-                        label="Current Zipcode"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
+
                       <Autocomplete
                         disablePortal
                         fullWidth
@@ -632,13 +659,277 @@ const FormPage = () => {
                             (item) => item.city === currentCity.id
                           )}
                           getOptionLabel={(option) => option.name}
-                          onChange={(e, data) => setCurrentThana(data)}
+                          onChange={(e, data) => {
+                            setCurrentThana(data);
+                            handleCurrentZipList(currentCity, data);
+                          }}
                           value={currentThana}
                           renderInput={(params) => (
                             <TextField
                               required
                               {...params}
-                              label="Present City"
+                              label="Current Thana"
+                              sx={{
+                                "& label.Mui-focused": {
+                                  color: "#695da9",
+                                },
+                                "& .MuiInput-underline:after": {
+                                  borderBottomColor: "#695da9",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  //   "& fieldset": {
+                                  //     borderColor: "red",
+                                  //   },
+                                  //   "&:hover fieldset": {
+                                  //     borderColor: "yellow",
+                                  //   },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#695da9",
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                      {Boolean(currentZipList.length) && (
+                        <Autocomplete
+                          disablePortal
+                          fullWidth
+                          size="small"
+                          options={currentZipList}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, data) => {
+                            setCurrentZipcode(data);
+                            handleCurrentAreaList(data);
+                          }}
+                          value={currentZipcode}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              {...params}
+                              label="Current Post Code"
+                              sx={{
+                                "& label.Mui-focused": {
+                                  color: "#695da9",
+                                },
+                                "& .MuiInput-underline:after": {
+                                  borderBottomColor: "#695da9",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  //   "& fieldset": {
+                                  //     borderColor: "red",
+                                  //   },
+                                  //   "&:hover fieldset": {
+                                  //     borderColor: "yellow",
+                                  //   },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#695da9",
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                      {Boolean(currentAreaList.length) && (
+                        <Autocomplete
+                          disablePortal
+                          fullWidth
+                          size="small"
+                          options={currentAreaList}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, data) => setCurrentArea(data)}
+                          value={currentArea}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              {...params}
+                              label="Current Area"
+                              sx={{
+                                "& label.Mui-focused": {
+                                  color: "#695da9",
+                                },
+                                "& .MuiInput-underline:after": {
+                                  borderBottomColor: "#695da9",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  //   "& fieldset": {
+                                  //     borderColor: "red",
+                                  //   },
+                                  //   "&:hover fieldset": {
+                                  //     borderColor: "yellow",
+                                  //   },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#695da9",
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                      <TextField
+                        required
+                        onChange={(e) => setCurrentAddress(e.target.value)}
+                        value={currentAddress}
+                        size="small"
+                        fullWidth
+                        id="current_address"
+                        label="Current Address"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+
+                      <Autocomplete
+                        disablePortal
+                        fullWidth
+                        size="small"
+                        options={addressData.data.city}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(e, data) => setParmanentCity(data)}
+                        value={parmanentCity}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            {...params}
+                            label="Parmanent City"
+                            sx={{
+                              "& label.Mui-focused": {
+                                color: "#695da9",
+                              },
+                              "& .MuiInput-underline:after": {
+                                borderBottomColor: "#695da9",
+                              },
+                              "& .MuiOutlinedInput-root": {
+                                //   "& fieldset": {
+                                //     borderColor: "red",
+                                //   },
+                                //   "&:hover fieldset": {
+                                //     borderColor: "yellow",
+                                //   },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#695da9",
+                                },
+                              },
+                            }}
+                          />
+                        )}
+                      />
+                      {parmanentCity && (
+                        <Autocomplete
+                          disablePortal
+                          fullWidth
+                          size="small"
+                          options={addressData.data.thana.filter(
+                            (item) => item.city === parmanentCity.id
+                          )}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, data) => {
+                            setParmanentThana(data);
+                            handleParmanentZipList(parmanentCity, data);
+                          }}
+                          value={parmanentThana}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              {...params}
+                              label="Parmanent Thana"
+                              sx={{
+                                "& label.Mui-focused": {
+                                  color: "#695da9",
+                                },
+                                "& .MuiInput-underline:after": {
+                                  borderBottomColor: "#695da9",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  //   "& fieldset": {
+                                  //     borderColor: "red",
+                                  //   },
+                                  //   "&:hover fieldset": {
+                                  //     borderColor: "yellow",
+                                  //   },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#695da9",
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                      {Boolean(parmanentZipList.length) && (
+                        <Autocomplete
+                          disablePortal
+                          fullWidth
+                          size="small"
+                          options={parmanentZipList}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, data) => {
+                            setParmanentZipcode(data);
+                            handleParmanentAreaList(data);
+                          }}
+                          value={parmanentZipcode}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              {...params}
+                              label="Parmanent Post Code"
+                              sx={{
+                                "& label.Mui-focused": {
+                                  color: "#695da9",
+                                },
+                                "& .MuiInput-underline:after": {
+                                  borderBottomColor: "#695da9",
+                                },
+                                "& .MuiOutlinedInput-root": {
+                                  //   "& fieldset": {
+                                  //     borderColor: "red",
+                                  //   },
+                                  //   "&:hover fieldset": {
+                                  //     borderColor: "yellow",
+                                  //   },
+                                  "&.Mui-focused fieldset": {
+                                    borderColor: "#695da9",
+                                  },
+                                },
+                              }}
+                            />
+                          )}
+                        />
+                      )}
+                      {Boolean(parmanentAreaList.length) && (
+                        <Autocomplete
+                          disablePortal
+                          fullWidth
+                          size="small"
+                          options={parmanentAreaList}
+                          getOptionLabel={(option) => option.name}
+                          onChange={(e, data) => setParmanentArea(data)}
+                          value={parmanentArea}
+                          renderInput={(params) => (
+                            <TextField
+                              required
+                              {...params}
+                              label="Parmanent Area"
                               sx={{
                                 "& label.Mui-focused": {
                                   color: "#695da9",
@@ -691,109 +982,6 @@ const FormPage = () => {
                           },
                         }}
                       />
-                      <TextField
-                        required
-                        onChange={(e) => setParmanentZipcode(e.target.value)}
-                        value={parmanentZipcode}
-                        size="small"
-                        fullWidth
-                        id="parmanent_zipcode"
-                        label="Parmanent Zipcode"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <Autocomplete
-                        disablePortal
-                        fullWidth
-                        size="small"
-                        options={addressData.data.city}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(e, data) => setParmanentCity(data)}
-                        value={parmanentCity}
-                        renderInput={(params) => (
-                          <TextField
-                            required
-                            {...params}
-                            label="Parmanent City"
-                            sx={{
-                              "& label.Mui-focused": {
-                                color: "#695da9",
-                              },
-                              "& .MuiInput-underline:after": {
-                                borderBottomColor: "#695da9",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                //   "& fieldset": {
-                                //     borderColor: "red",
-                                //   },
-                                //   "&:hover fieldset": {
-                                //     borderColor: "yellow",
-                                //   },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#695da9",
-                                },
-                              },
-                            }}
-                          />
-                        )}
-                      />
-                      {parmanentCity && (
-                        <Autocomplete
-                          disablePortal
-                          fullWidth
-                          size="small"
-                          options={addressData.data.thana.filter(
-                            (item) => item.city === parmanentCity.id
-                          )}
-                          getOptionLabel={(option) => option.name}
-                          onChange={(e, data) => setParmanentThana(data)}
-                          value={parmanentThana}
-                          renderInput={(params) => (
-                            <TextField
-                              required
-                              {...params}
-                              label="Parmanent City"
-                              sx={{
-                                "& label.Mui-focused": {
-                                  color: "#695da9",
-                                },
-                                "& .MuiInput-underline:after": {
-                                  borderBottomColor: "#695da9",
-                                },
-                                "& .MuiOutlinedInput-root": {
-                                  //   "& fieldset": {
-                                  //     borderColor: "red",
-                                  //   },
-                                  //   "&:hover fieldset": {
-                                  //     borderColor: "yellow",
-                                  //   },
-                                  "&.Mui-focused fieldset": {
-                                    borderColor: "#695da9",
-                                  },
-                                },
-                              }}
-                            />
-                          )}
-                        />
-                      )}
                     </Grid>
                     <Grid
                       xs={12}
@@ -861,6 +1049,70 @@ const FormPage = () => {
                             },
                           },
                         }}
+                      />
+                      <TextField
+                        onChange={(e) => setBinNumber(e.target.value)}
+                        value={binNumber}
+                        size="small"
+                        fullWidth
+                        id="bin_number"
+                        label="BIN Number"
+                        variant="outlined"
+                        sx={{
+                          "& label.Mui-focused": {
+                            color: "#695da9",
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottomColor: "#695da9",
+                          },
+                          "& .MuiOutlinedInput-root": {
+                            //   "& fieldset": {
+                            //     borderColor: "red",
+                            //   },
+                            //   "&:hover fieldset": {
+                            //     borderColor: "yellow",
+                            //   },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#695da9",
+                            },
+                          },
+                        }}
+                      />
+                      <Autocomplete
+                        disablePortal
+                        fullWidth
+                        size="small"
+                        id="combo-box-demo"
+                        options={deliveryData.data.delivery_service}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(e, data) => setDelivery(data)}
+                        value={delivery}
+                        renderInput={(params) => (
+                          <TextField
+                            required
+                            {...params}
+                            label="Select Delivery Service"
+                            sx={{
+                              "& label.Mui-focused": {
+                                color: "#695da9",
+                              },
+                              "& .MuiInput-underline:after": {
+                                borderBottomColor: "#695da9",
+                              },
+                              "& .MuiOutlinedInput-root": {
+                                //   "& fieldset": {
+                                //     borderColor: "red",
+                                //   },
+                                //   "&:hover fieldset": {
+                                //     borderColor: "yellow",
+                                //   },
+                                "&.Mui-focused fieldset": {
+                                  borderColor: "#695da9",
+                                },
+                              },
+                            }}
+                          />
+                        )}
                       />
                       <Button
                         sx={{
@@ -953,70 +1205,6 @@ const FormPage = () => {
                           hidden
                         />
                       </Button>
-                      <TextField
-                        onChange={(e) => setBinNumber(e.target.value)}
-                        value={binNumber}
-                        size="small"
-                        fullWidth
-                        id="bin_number"
-                        label="BIN Number"
-                        variant="outlined"
-                        sx={{
-                          "& label.Mui-focused": {
-                            color: "#695da9",
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottomColor: "#695da9",
-                          },
-                          "& .MuiOutlinedInput-root": {
-                            //   "& fieldset": {
-                            //     borderColor: "red",
-                            //   },
-                            //   "&:hover fieldset": {
-                            //     borderColor: "yellow",
-                            //   },
-                            "&.Mui-focused fieldset": {
-                              borderColor: "#695da9",
-                            },
-                          },
-                        }}
-                      />
-                      <Autocomplete
-                        disablePortal
-                        fullWidth
-                        size="small"
-                        id="combo-box-demo"
-                        options={deliveryData.data.delivery_service}
-                        getOptionLabel={(option) => option.name}
-                        onChange={(e, data) => setDelivery(data)}
-                        value={delivery}
-                        renderInput={(params) => (
-                          <TextField
-                            required
-                            {...params}
-                            label="Select Delivery Service"
-                            sx={{
-                              "& label.Mui-focused": {
-                                color: "#695da9",
-                              },
-                              "& .MuiInput-underline:after": {
-                                borderBottomColor: "#695da9",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                //   "& fieldset": {
-                                //     borderColor: "red",
-                                //   },
-                                //   "&:hover fieldset": {
-                                //     borderColor: "yellow",
-                                //   },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#695da9",
-                                },
-                              },
-                            }}
-                          />
-                        )}
-                      />
 
                       <Typography fontWeight="bold">
                         BANK INFORMATION
@@ -1173,6 +1361,7 @@ const FormPage = () => {
                     </Grid>
                     <Grid
                       item
+                      xs={12}
                       md={12}
                       sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                     >

@@ -27,7 +27,7 @@ const Documents = ({ setNext, data }) => {
         <Typography variant="h4" align="center">
           Agreement
         </Typography>
-        {parse(data)}
+        <Box px={4}>{parse(data)}</Box>
 
         <FormControlLabel
           onChange={(e) => setDocument(e.target.checked)}
