@@ -1,4 +1,4 @@
-import { Box, Grid, Link, Typography } from "@mui/material";
+import { Box, Grid, Link, Paper, Typography } from "@mui/material";
 import React from "react";
 import { useStateContext } from "../contexts/ContextProvider";
 import { AiFillInstagram } from "react-icons/ai";
@@ -11,7 +11,7 @@ const Footer = () => {
 
   return (
     <>
-      <Grid
+      {/* <Grid
         container
         spacing={2}
         sx={{ background: "#171616", px: 2, py: 5, color: "#fff", mt: 0 }}
@@ -103,8 +103,15 @@ const Footer = () => {
             </a>
           </Box>
         </Grid>
-      </Grid>
-      <Typography textAlign="center" p={1}>
+      </Grid> */}
+      <Typography
+        textAlign="center"
+        component={Paper}
+        p={1}
+        sx={{
+          background: "white",
+        }}
+      >
         Copyright {new Date().getFullYear()} ©All Rights Reserved | ULA Limited.
       </Typography>
     </>

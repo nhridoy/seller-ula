@@ -17,17 +17,27 @@ function App() {
   const { deliveryData } = useStateContext();
 
   return (
-    <Box sx={{ background: "#f6f6f6" }}>
-      <Header />
-      {proceed && next ? (
-        <FormPage />
-      ) : next ? (
-        <Terms setProceed={setProceed} data={deliveryData.data.data} />
-      ) : (
-        <Documents setNext={setNext} data={deliveryData.data.require_data} />
-      )}
+    <Box
+      sx={{
+        background: "#f6f6f6",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        minHeight: "100vh",
+      }}
+    >
+      <Box>
+        <Header />
+        {proceed && next ? (
+          <FormPage />
+        ) : next ? (
+          <Terms setProceed={setProceed} data={deliveryData.data.data} />
+        ) : (
+          <Documents setNext={setNext} data={deliveryData.data.require_data} />
+        )}
+        <ToastContainer />
+      </Box>
       <Footer />
-      <ToastContainer />
     </Box>
   );
 }

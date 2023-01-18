@@ -332,10 +332,6 @@ const FormPage = () => {
     });
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   return (
     <Box sx={{ paddingX: { xs: 4, md: 8 }, paddingY: 4 }}>
       <Paper
@@ -377,15 +373,9 @@ const FormPage = () => {
             })}
           </Stepper>
           {activeStep === steps.length ? (
-            <>
-              <Typography sx={{ mt: 2, mb: 1 }}>
-                All steps completed - you&apos;re finished
-              </Typography>
-              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                <Box sx={{ flex: "1 1 auto" }} />
-                <Button onClick={handleReset}>Reset</Button>
-              </Box>
-            </>
+            <Typography sx={{ mt: 2, mb: 1 }}>
+              All steps completed - you&apos;re finished
+            </Typography>
           ) : (
             <>
               <Box sx={{ mt: 2, mb: 1 }}>
@@ -432,6 +422,7 @@ const FormPage = () => {
                       <DatePicker
                         label="Date of Birth"
                         value={birthDate}
+                        inputFormat="DD/MM/YYYY"
                         onChange={(newValue) => {
                           setBirthDate(newValue);
                         }}
@@ -497,7 +488,9 @@ const FormPage = () => {
                         value={sellerNID}
                         size="small"
                         fullWidth
-                        type="number"
+                        onKeyPress={(e) =>
+                          !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                        }
                         id="nid_number"
                         label="NID Number"
                         variant="outlined"
@@ -1524,6 +1517,9 @@ const FormPage = () => {
                       onChange={(e) => setSellerPhone(e.target.value)}
                       value={sellerPhone}
                       size="small"
+                      onKeyPress={(e) =>
+                        !/^[0-9\+]+$/.test(e.key) && e.preventDefault()
+                      }
                       fullWidth
                       id="seller_phone"
                       label="Phone"

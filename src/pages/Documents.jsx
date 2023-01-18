@@ -24,9 +24,7 @@ const Documents = ({ setNext, data }) => {
         }}
         elevation={2}
       >
-        <Typography variant="h4" align="center">
-          Agreement
-        </Typography>
+        
         <Box px={4}>{parse(data)}</Box>
 
         <FormControlLabel

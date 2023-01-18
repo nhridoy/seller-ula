@@ -25,9 +25,6 @@ const Terms = ({ setProceed, data }) => {
         }}
         elevation={2}
       >
-        <Typography variant="h4" align="center">
-          Agreement
-        </Typography>
         <Box px={4}>{parse(data)}</Box>
 
         <FormControlLabel
@@ -35,23 +32,7 @@ const Terms = ({ setProceed, data }) => {
           control={<Checkbox />}
           label={
             <div>
-              By selecting proceed I agree to the{" "}
-              <a
-                href="https://ula.com.bd/termsandcondition"
-                target="_blank"
-                style={{ fontWeight: "bold", textDecoration: "none" }}
-              >
-                Terms & Conditions
-              </a>{" "}
-              and{" "}
-              <a
-                href="https://ula.com.bd/privacy-policy"
-                target="_blank"
-                style={{ fontWeight: "bold", textDecoration: "none" }}
-              >
-                Privacy Policy
-              </a>{" "}
-              of ULA.
+              By selecting proceed I agree to the Terms & Conditions of ULA.
             </div>
           }
           labelPlacement="end"
