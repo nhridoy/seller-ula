@@ -293,7 +293,7 @@ const FormPage = () => {
             hanglepageChange();
           })
           .catch((e) => {
-            toast.error(e.response.data.msg);
+            toast.error(e.response.data.msg || "Please check all fields");
             return;
           });
       }
@@ -1053,6 +1053,9 @@ const FormPage = () => {
                         id="bin_number"
                         label="BIN Number (If Any)"
                         variant="outlined"
+                        onKeyPress={(e) =>
+                          !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                        }
                         sx={{
                           "& label.Mui-focused": {
                             color: "#695da9",
@@ -1153,7 +1156,7 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Shop Cover Photo{" "}
+                        Upload Shop Cover (150px * 1440px){" "}
                         {sellerShopCover ? "(Selected)" : "(Required)"}
                         <input
                           required
@@ -1241,6 +1244,9 @@ const FormPage = () => {
                         size="small"
                         fullWidth
                         id="bank_no"
+                        onKeyPress={(e) =>
+                          !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                        }
                         label="Bank Account Number"
                         variant="outlined"
                         sx={{
@@ -1299,6 +1305,9 @@ const FormPage = () => {
                         size="small"
                         fullWidth
                         id="bank_routing"
+                        onKeyPress={(e) =>
+                          !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                        }
                         label="Routing Number"
                         variant="outlined"
                         sx={{
@@ -1399,6 +1408,9 @@ const FormPage = () => {
                         id="first_witness_phone"
                         label="Phone"
                         variant="outlined"
+                        onKeyPress={(e) =>
+                          !/^[0-9\+]+$/.test(e.key) && e.preventDefault()
+                        }
                         sx={{
                           "& label.Mui-focused": {
                             color: "#695da9",
@@ -1427,6 +1439,9 @@ const FormPage = () => {
                         fullWidth
                         id="first_witness_nid"
                         label="NID"
+                        onKeyPress={(e) =>
+                          !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                        }
                         variant="outlined"
                         sx={{
                           "& label.Mui-focused": {
@@ -1555,6 +1570,9 @@ const FormPage = () => {
                       fullWidth
                       id="OTP"
                       label="OTP"
+                      onKeyPress={(e) =>
+                        !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                      }
                       variant="outlined"
                       sx={{
                         "& label.Mui-focused": {
@@ -1621,6 +1639,9 @@ const FormPage = () => {
                       type="number"
                       label="OTP"
                       variant="outlined"
+                      onKeyPress={(e) =>
+                        !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                      }
                       sx={{
                         "& label.Mui-focused": {
                           color: "#695da9",
