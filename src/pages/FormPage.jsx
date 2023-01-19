@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers";
 import React from "react";
+import OtpInput from "react-otp-input";
 import { toast } from "react-toastify";
 import { useStateContext } from "../contexts/ContextProvider";
 import myAxios from "../utils/myAxios";
@@ -373,8 +374,9 @@ const FormPage = () => {
             })}
           </Stepper>
           {activeStep === steps.length ? (
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
+            <Typography sx={{ my: 10 }} variant="h6" textAlign="center">
+              <Typography variant="h4">PENDING APPROVAL</Typography>
+              YOU WILL GET AN EMAIL AFTER GETTING APPROVAL
             </Typography>
           ) : (
             <>
@@ -1707,37 +1709,36 @@ const FormPage = () => {
                     />
                   </Box>
                 ) : activeStep === 2 ? (
-                  <Box>
-                    <TextField
-                      required
-                      onChange={(e) => setSellerPhoneOTP(e.target.value)}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="h5" mb={2}>
+                      ENTER YOUR OTP
+                    </Typography>
+                    <OtpInput
+                      shouldAutoFocus
+                      onChange={(otp) => setSellerPhoneOTP(otp)}
                       value={sellerPhoneOTP}
-                      size="small"
-                      fullWidth
-                      id="OTP"
-                      label="OTP"
-                      onKeyPress={(e) =>
-                        !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                      numInputs={6}
+                      isInputNum
+                      separator={
+                        <Box
+                          width={{ xs: "4px", md: "20px" }}
+                          textAlign="center"
+                        >
+                          <Typography variant="subtitle2">-</Typography>
+                        </Box>
                       }
-                      variant="outlined"
-                      sx={{
-                        "& label.Mui-focused": {
-                          color: "#695da9",
-                        },
-                        "& .MuiInput-underline:after": {
-                          borderBottomColor: "#695da9",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          //   "& fieldset": {
-                          //     borderColor: "red",
-                          //   },
-                          //   "&:hover fieldset": {
-                          //     borderColor: "yellow",
-                          //   },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#695da9",
-                          },
-                        },
+                      containerStyle={{ margin: "0 auto" }}
+                      inputStyle={{
+                        fontSize: "32px",
+                        height: "42px",
+                        width: "42px",
+                        outline: "none",
                       }}
                     />
                   </Box>
@@ -1775,37 +1776,36 @@ const FormPage = () => {
                     />
                   </Box>
                 ) : activeStep === 4 ? (
-                  <Box>
-                    <TextField
-                      onChange={(e) => setSellerEmailOTP(e.target.value)}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography variant="h5" mb={2}>
+                      ENTER YOUR OTP
+                    </Typography>
+                    <OtpInput
+                      shouldAutoFocus
+                      onChange={(otp) => setSellerEmailOTP(otp)}
                       value={sellerEmailOTP}
-                      size="small"
-                      fullWidth
-                      id="email_otp"
-                      type="number"
-                      label="OTP"
-                      variant="outlined"
-                      onKeyPress={(e) =>
-                        !/^[0-9]+$/.test(e.key) && e.preventDefault()
+                      numInputs={6}
+                      isInputNum
+                      separator={
+                        <Box
+                          width={{ xs: "4px", md: "20px" }}
+                          textAlign="center"
+                        >
+                          <Typography variant="subtitle2">-</Typography>
+                        </Box>
                       }
-                      sx={{
-                        "& label.Mui-focused": {
-                          color: "#695da9",
-                        },
-                        "& .MuiInput-underline:after": {
-                          borderBottomColor: "#695da9",
-                        },
-                        "& .MuiOutlinedInput-root": {
-                          //   "& fieldset": {
-                          //     borderColor: "red",
-                          //   },
-                          //   "&:hover fieldset": {
-                          //     borderColor: "yellow",
-                          //   },
-                          "&.Mui-focused fieldset": {
-                            borderColor: "#695da9",
-                          },
-                        },
+                      containerStyle={{ margin: "0 auto" }}
+                      inputStyle={{
+                        fontSize: "32px",
+                        height: "42px",
+                        width: "42px",
+                        outline: "none",
                       }}
                     />
                   </Box>

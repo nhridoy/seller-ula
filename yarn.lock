@@ -2174,6 +2174,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-otp-input@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "react-otp-input@npm:2.4.0"
+  peerDependencies:
+    react: ^16.2.0
+    react-dom: ^16.2.0
+  checksum: c73230be43fcc4d4abf8c39e9fe546a40637dae3e9633dc0af1727bc6ef14839b7e2d455216208ab718697c40513781740c95a2c300e8c5513954842e18c1dbf
+  languageName: node
+  linkType: hard
+
 "react-property@npm:2.0.0":
   version: 2.0.0
   resolution: "react-property@npm:2.0.0"
@@ -2352,6 +2362,7 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
     react-icons: ^4.7.1
+    react-otp-input: ^2.4.0
     react-toastify: ^9.1.1
     vite: ^4.0.0
   languageName: unknown
