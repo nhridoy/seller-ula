@@ -516,6 +516,8 @@ const FormPage = () => {
                       />
                       <Button
                         sx={{
+                          display: "flex",
+                          alignItems: "center",
                           p: 0.85,
                           color: "#7155e5",
                           borderColor: "#7155e5",
@@ -529,8 +531,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload NID Image{" "}
-                        {sellerNIDImage ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          NID Image&nbsp;
+                        </span>
+                        {sellerNIDImage ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(sellerNIDImage)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
@@ -559,8 +579,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Seller Signature{" "}
-                        {sellerSignature ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          Seller Signature&nbsp;
+                        </span>
+                        {sellerSignature ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(sellerSignature)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
@@ -590,8 +628,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Passport Size Image{" "}
-                        {sellerPassportImage ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          Passport Size Image&nbsp;
+                        </span>
+                        {sellerPassportImage ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(sellerPassportImage)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
@@ -1127,8 +1183,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Shop Logo{" "}
-                        {sellerShopLogo ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          Shop Logo&nbsp;
+                        </span>
+                        {sellerShopLogo ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(sellerShopLogo)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
@@ -1156,8 +1230,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Shop Cover (150px * 1440px){" "}
-                        {sellerShopCover ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          Shop Cover (150px * 1440px)&nbsp;
+                        </span>
+                        {sellerShopCover ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(sellerShopCover)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
@@ -1187,8 +1279,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Trade License{" "}
-                        {sellerShopLicense ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          Trade License&nbsp;
+                        </span>
+                        {sellerShopLicense ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(sellerShopLicense)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
@@ -1346,8 +1456,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Cheque Image{" "}
-                        {sellerShopCheck ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          Cheque Image&nbsp;
+                        </span>
+                        {sellerShopCheck ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(sellerShopCheck)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
@@ -1507,8 +1635,26 @@ const FormPage = () => {
                         fullWidth
                         component="label"
                       >
-                        Upload Signature{" "}
-                        {firstWitnessSignature ? "(Selected)" : "(Required)"}
+                        <span
+                          style={{
+                            flexGrow: 1,
+                          }}
+                        >
+                          Witness Signature&nbsp;
+                        </span>
+                        {firstWitnessSignature ? (
+                          <img
+                            style={{
+                              marginLeft: "auto",
+                              objectFit: "contain",
+                            }}
+                            width="20px"
+                            height="20px"
+                            src={URL.createObjectURL(firstWitnessSignature)}
+                          />
+                        ) : (
+                          <span>(Required)</span>
+                        )}
                         <input
                           required
                           accept="image/*"
