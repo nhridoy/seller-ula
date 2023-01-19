@@ -19,7 +19,7 @@ const Header = () => {
       }}
     >
       <Link
-        href={SHOP_URL + "home"}
+        href={SHOP_URL}
         color="#fff"
         underline="none"
         display="flex"
@@ -29,7 +29,6 @@ const Header = () => {
       >
         <FaHome /> Home
       </Link>
-      
     </Box>
   );
 };
